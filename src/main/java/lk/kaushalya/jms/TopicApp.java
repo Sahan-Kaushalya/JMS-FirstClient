@@ -5,16 +5,18 @@ import jakarta.jms.*;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-public class App {
+public class TopicApp {
     public static void main(String[] args) {
         try {
             InitialContext ic = new InitialContext();
 
-            TopicConnectionFactory factory = (TopicConnectionFactory) ic.lookup("myTopicConnectionFactory");
+            TopicConnectionFactory factory = (TopicConnectionFactory) ic.lookup("jms/myTopicConnectionFactory");
             TopicConnection connection = factory.createTopicConnection();
+
+            System.out.println(connection);
             connection.start();
 
-            TopicSession session = connection.createTopicSession(false, TopicSession.AUTO_ACKNOWLEDGE);
+            TopicSession session = connection.createTopicSession(false, Session.DUPS_OK_ACKNOWLEDGE);
             Topic topic = (Topic) ic.lookup("myTopic");
             TopicSubscriber subscriber = session.createSubscriber(topic);
 
